@@ -1,0 +1,84 @@
+# Problem
+# Pivot the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and displayed underneath its corresponding Occupation. The output column headers should be Doctor, Professor, Singer, and Actor, respectively.
+
+# Note: Print NULL when there are no more names corresponding to an occupation.
+
+# Input Format
+# The OCCUPATIONS table is described as follows:
+
+# Column	Type
+# Name	String
+# Occupation	String
+# Occupation will only contain one of the following values: Doctor, Professor, Singer or Actor.
+
+# Sample Input
+
+# Name	Occupation
+# Samantha	Doctor
+# Julia	Actor
+# Maria	Actor
+# Ashley	Professor
+# Ketty	Professor
+# Christeen	Professor
+# Jane	Actor
+# Jenny	Doctor
+# Priya	Singer
+# Sample Output
+
+# Jenny    Ashley     Meera  Jane
+# Samantha Christeen  Priya  Julia
+# NULL     Ketty      NULL   Maria
+# Explanation
+# The first column is an alphabetically ordered list of Doctor names.
+# The second column is an alphabetically ordered list of Professor names.
+# The third column is an alphabetically ordered list of Singer names.
+# The fourth column is an alphabetically ordered list of Actor names.
+# The empty cell data for columns with less than the maximum number of names per occupation (in this case, the Professor and Actor columns) are filled with NULL values.
+
+#------------------------------------------------------------
+
+# Sorun
+# MESLEKİLER'deki Meslek sütununu döndürün, böylece her Ad alfabetik olarak sıralanır ve karşılık gelen Mesleğin altında görüntülenir. Çıktı sütun başlıkları sırasıyla Doktor, Profesör, Şarkıcı ve Aktör olmalıdır.
+
+# Not: Bir mesleğe karşılık gelen başka ad kalmadığında NULL yazdırın.
+
+# Giriş Formatı
+# MESLEKLER tablosu şu şekilde açıklanmıştır:
+
+# Sütun Türü
+# İsim Dizesi
+# Meslek Dizisi
+# Meslek, şu değerlerden yalnızca birini içerecektir: Doktor, Profesör, Şarkıcı veya Aktör.
+
+# Örnek Giriş
+
+# İsim Meslek
+# Samantha Doktor
+# Julia Oyuncu
+# Maria Oyuncu
+# Ashley Profesör
+# Ketty Profesörü
+# Hıristiyan Profesör
+# Jane Aktör
+#Jenny Doktor
+# Priya Şarkıcı
+# Örnek Çıktı
+
+# Jenny Ashley Meera Jane
+# Samantha Christen Priya Julia
+# BOŞ Ketty BOŞ Maria
+# Açıklama
+# İlk sütun, Doktor adlarının alfabetik olarak sıralanmış bir listesidir.
+# İkinci sütun, Profesör isimlerinin alfabetik olarak sıralanmış bir listesidir.
+# Üçüncü sütun, Şarkıcı adlarının alfabetik olarak sıralanmış bir listesidir.
+# Dördüncü sütun, Aktör adlarının alfabetik olarak sıralanmış bir listesidir.
+# Meslek başına maksimum sayıdan daha az isme sahip sütunlar için boş hücre verileri (bu durumda Profesör ve Aktör sütunları) NULL değerlerle doldurulur.
+
+set @r1=0, @r2=0, @r3=0, @r4=0;
+select min(Doctor), min(Professor), min(Singer), min(Actor)
+from(select case when Occupation="Doctor" then (@r1:=@r1+1) when Occupation="Professor" then (@r2:=@r2+1) when Occupation="Singer" then (@r3:=@r3+1) when Occupation="Actor" then (@r4:=@r4+1) end as RowNumber,
+case when Occupation="Doctor" then Name end as Doctor,
+case when Occupation="Professor" then Name end as Professor,
+case when Occupation="Singer" then Name end as Singer,
+case when Occupation="Actor" then Name end as Actor from OCCUPATIONS order by Name
+) Temp group by RowNumber;
